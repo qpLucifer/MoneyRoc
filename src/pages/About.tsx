@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Row, Col, Card, Avatar, Space, Divider } from 'antd';
+import { Typography, Row, Col, Card, Avatar, Space } from 'antd';
 import SkillProgress from '../components/about/SkillProgress';
 import Timeline from '../components/about/Timeline';
 import ContactCard from '../components/about/ContactCard';

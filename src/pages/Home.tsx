@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Typography, Card, Space, Avatar, Button, Tag, Row, Col, Carousel, Divider } from 'antd';
 import { GithubOutlined, TwitterOutlined, MailOutlined, SmileOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { mockPosts, mockTags } from '../data/mockData';
 import { useTheme } from '../context/ThemeContext';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
 const featuredPosts = mockPosts.slice(0, 3);
 const latestPosts = mockPosts.slice(0, 6);
