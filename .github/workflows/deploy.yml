@@ -36,4 +36,4 @@ jobs:
             ls -la
       - name: Upload files via rsync
         run: |
-          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./dist/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
