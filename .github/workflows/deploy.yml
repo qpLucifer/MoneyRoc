@@ -43,6 +43,8 @@ jobs:
           else
             echo "SSH key is set (value hidden for security)."
           fi
+      - name: Test SSH Connection
+        run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
       - name: Upload files via rsync
         run: |
           rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
