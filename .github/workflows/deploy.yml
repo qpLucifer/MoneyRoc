@@ -2,7 +2,7 @@ name: CI/CD Deploy
 
 on:
   push:
-    branches: [ "main" ]  # 只在 main 分支 push 时触发
+    branches: ["main"] # 只在 main 分支 push 时触发
 
 jobs:
   build-and-deploy:
@@ -15,7 +15,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm install
@@ -34,6 +34,15 @@ jobs:
             cd ${{ secrets.TARGET_DIR }}
             echo "正在部署..."
             ls -la
+            # pm2 restart your_react_app
+
+      - name: Debug SSH Key
+        run: |
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "Error: SSH_PRIVATE_KEY is empty!"
+          else
+            echo "SSH key is set (value hidden for security)."
+          fi
       - name: Upload files via rsync
         run: |
           rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
