@@ -23,52 +23,34 @@ jobs:
       - name: Build project
         run: npm run build
       
-      - name: Setup SSH
-        run: |
-          # 创建SSH目录并设置权限
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_options: "-o StrictHostKeyChecking=no"
+          source: "./build/*"
+          target: ${{ secrets.TARGET_DIR }}
+          strip_components: 1
+          overwrite: true
+          script: |
+            cd ${{ secrets.TARGET_DIR }}
+            echo "正在部署..."
+            ls -la
+            # pm2 restart your_react_app
 
-          # 将私钥写入文件
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-
-          # 添加服务器到known_hosts
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-          # 创建SSH配置文件
-          cat << EOF > ~/.ssh/config
-          Host server
-            HostName ${{ secrets.SERVER_IP }}
-            User ${{ secrets.SSH_USERNAME }}
-            IdentityFile ~/.ssh/deploy_key
-            IdentitiesOnly yes
-            StrictHostKeyChecking no
-            PasswordAuthentication no
-          EOF
-          chmod 600 ~/.ssh/config
-
-          ssh-keygen -l -f ~/.ssh/deploy_key
-          
-          # 测试连接
-          ssh -vT server
-
-      # - name: Deploy to Server via SSH
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SERVER_IP }}
-      #     username: ${{ secrets.SSH_USERNAME }}
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     ssh_options: "-o StrictHostKeyChecking=no"
-      #     source: "./build/*"
-      #     target: ${{ secrets.TARGET_DIR }}
-      #     strip_components: 1
-      #     overwrite: true
-      #     script: |
-      #       cd ${{ secrets.TARGET_DIR }}
-      #       echo "正在部署..."
-      #       ls -la
-      #       # pm2 restart your_react_app
+      - name: Deploy to Server via SSH
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_options: "-o StrictHostKeyChecking=no"
+          source: "./build/*"
+          target: ${{ secrets.TARGET_DIR }}
+          strip_components: 1
+          overwrite: true
           
 
       # - name: Debug SSH Key
@@ -78,8 +60,8 @@ jobs:
       #     else
       #       echo "SSH key is set (value hidden for security)."
       #     fi
-      - name: Test SSH Connection
-        run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
+      # - name: Test SSH Connection
+      #   run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
       # - name: Upload files via rsync
       #   run: |
       #     rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
