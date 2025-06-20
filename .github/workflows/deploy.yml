@@ -48,6 +48,10 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
+          ssh-keyscan github.com >> ~/.ssh/known_hosts2
+          chmod 600 ~/.ssh/known_hosts2
+          ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts2
+          chmod 600 /etc/ssh/ssh_known_hosts2
       - name: Test SSH Connection
         run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
       - name: Upload files via rsync
