@@ -46,22 +46,22 @@ jobs:
           EOF
           chmod 600 ~/.ssh/config
 
-      - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh_options: "-o StrictHostKeyChecking=no"
-          source: "./build/*"
-          target: ${{ secrets.TARGET_DIR }}
-          strip_components: 1
-          overwrite: true
-          script: |
-            cd ${{ secrets.TARGET_DIR }}
-            echo "正在部署..."
-            ls -la
-            # pm2 restart your_react_app
+      # - name: Deploy to Server via SSH
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SSH_USERNAME }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     ssh_options: "-o StrictHostKeyChecking=no"
+      #     source: "./build/*"
+      #     target: ${{ secrets.TARGET_DIR }}
+      #     strip_components: 1
+      #     overwrite: true
+      #     script: |
+      #       cd ${{ secrets.TARGET_DIR }}
+      #       echo "正在部署..."
+      #       ls -la
+      #       # pm2 restart your_react_app
           
 
       # - name: Debug SSH Key
