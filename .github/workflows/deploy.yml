@@ -30,6 +30,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_options: "-o StrictHostKeyChecking=no"
+          source: "./build/*"
+          target: ${{ secrets.TARGET_DIR }}
           script: |
             rm -rf ${{ secrets.TARGET_DIR }}/*
             cd ${{ secrets.TARGET_DIR }}
@@ -37,15 +39,15 @@ jobs:
             ls -la
             # pm2 restart your_react_app
 
-      - name: Debug SSH Key
-        run: |
-          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
-            echo "Error: SSH_PRIVATE_KEY is empty!"
-          else
-            echo "SSH key is set (value hidden for security)."
-          fi
+      # - name: Debug SSH Key
+      #   run: |
+      #     if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+      #       echo "Error: SSH_PRIVATE_KEY is empty!"
+      #     else
+      #       echo "SSH key is set (value hidden for security)."
+      #     fi
       # - name: Test SSH Connection
       #   run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
-      - name: Upload files via rsync
-        run: |
-          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
+      # - name: Upload files via rsync
+      #   run: |
+      #     rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
