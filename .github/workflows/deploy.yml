@@ -30,16 +30,15 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_options: "-o StrictHostKeyChecking=no"
-          script: |
-            rm -rf ${{ secrets.TARGET_DIR }}/*
-            cd ${{ secrets.TARGET_DIR }}
-            echo "正在部署..."
-            ls -la
-            # pm2 restart your_react_app
           source: "./build/*"
           target: ${{ secrets.TARGET_DIR }}
           strip_components: 1
           overwrite: true
+          script: |
+            cd ${{ secrets.TARGET_DIR }}
+            echo "正在部署..."
+            ls -la
+            # pm2 restart your_react_app
           
 
       # - name: Debug SSH Key
