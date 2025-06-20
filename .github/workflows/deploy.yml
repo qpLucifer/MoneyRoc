@@ -43,6 +43,11 @@ jobs:
           else
             echo "SSH key is set (value hidden for security)."
           fi
+      - name: Add GitHub to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
       - name: Test SSH Connection
         run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
       - name: Upload files via rsync
