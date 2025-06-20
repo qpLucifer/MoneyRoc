@@ -29,6 +29,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_options: "-o StrictHostKeyChecking=no"
           script: |
             rm -rf ${{ secrets.TARGET_DIR }}/*
             cd ${{ secrets.TARGET_DIR }}
