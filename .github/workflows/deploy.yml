@@ -22,6 +22,29 @@ jobs:
 
       - name: Build project
         run: npm run build
+      
+      - name: Setup SSH
+        run: |
+          # 创建SSH目录并设置权限
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          # 将私钥写入文件
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # 添加服务器到known_hosts
+          ssh-keyscan ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+          # 创建SSH配置文件
+          cat << EOF > ~/.ssh/config
+          Host server
+            HostName ${{ secrets.SERVER_IP }}
+            User ${{ secrets.SSH_USERNAME }}
+            IdentityFile ~/.ssh/deploy_key
+            StrictHostKeyChecking no
+          EOF
+          chmod 600 ~/.ssh/config
 
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@master
@@ -48,8 +71,8 @@ jobs:
       #     else
       #       echo "SSH key is set (value hidden for security)."
       #     fi
-      # - name: Test SSH Connection
-      #   run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
+      - name: Test SSH Connection
+        run: ssh -v ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "echo Connected successfully"
       # - name: Upload files via rsync
       #   run: |
-      #     rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
+      #     rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }}:${{ secrets.TARGET_DIR }}/
