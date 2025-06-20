@@ -34,7 +34,7 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
 
           # 添加服务器到known_hosts
-          ssh-keyscan ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
           # 创建SSH配置文件
           cat << EOF > ~/.ssh/config
@@ -42,9 +42,16 @@ jobs:
             HostName ${{ secrets.SERVER_IP }}
             User ${{ secrets.SSH_USERNAME }}
             IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
             StrictHostKeyChecking no
+            PasswordAuthentication no
           EOF
           chmod 600 ~/.ssh/config
+
+          ssh-keygen -l -f ~/.ssh/deploy_key
+          
+          # 测试连接
+          ssh -vT server
 
       # - name: Deploy to Server via SSH
       #   uses: appleboy/ssh-action@master
