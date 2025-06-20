@@ -32,6 +32,8 @@ jobs:
           ssh_options: "-o StrictHostKeyChecking=no"
           source: "./build/*"
           target: ${{ secrets.TARGET_DIR }}
+          strip_components: 1
+          overwrite: true
           script: |
             rm -rf ${{ secrets.TARGET_DIR }}/*
             cd ${{ secrets.TARGET_DIR }}
